@@ -1,26 +1,21 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <LoadingScreen v-if="loading" />
+  <TrainDashboard v-else />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoadingScreen from "./components/LoadingScreen.vue";
+import TrainDashboard from "./components/TrainDashboard.vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  data() {
+    return { loading: true };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 3000);
+  },
+  components: { LoadingScreen, TrainDashboard },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
