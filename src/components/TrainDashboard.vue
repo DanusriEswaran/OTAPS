@@ -33,13 +33,14 @@
         </v-card>
 
         <!-- Hidden Audio -->
-        <audio ref="audio" :src="file" preload="auto"></audio>
+        <audio ref="alertAudio" :src="file"></audio>
 
         <!-- Acceleration -->
         <div
           class="d-flex justify-center align-start mt-8"
           style="gap: 20px; flex-wrap: wrap"
         >
+          <!-- Acceleration X -->
           <v-card
             class="pa-6 text-center elevation-12 rounded-lg"
             style="background-color: #b7d5eb; height: 100px"
@@ -91,17 +92,17 @@
           </v-card>
         </div>
 
-        <!-- Animated Number Counter Card -->
+        <!-- Distance Card -->
         <v-card
           class="pa-6 text-center shadow-card elevation-12 rounded-lg w-100 mt-8"
           style="background-color: #b7d5eb"
         >
           <v-card-title class="text-h6 font-weight-bold">
-            Current Distance (in meters)
+            Current Distance
           </v-card-title>
           <v-card-text>
             <h2 class="text-h3 font-weight-bold text-primary">
-              {{ animatedDistance.toFixed(2) }}
+              {{ distance.toFixed(2) }}
             </h2>
           </v-card-text>
         </v-card>
@@ -123,15 +124,19 @@ export default {
       accelX: 0,
       accelY: 0,
       accelZ: 0,
-      animatedDistance: 0,
+      distance: 0,
+      userInteracted: false,
     };
   },
 
   methods: {
     playAlertSound() {
-      const audio = this.$refs.audio;
-      audio.currentTime = 0;
-      audio.play();
+      const audio = this.$refs.alertAudio;
+      if (audio) {
+        audio.play();
+      } else {
+        console.log("audio element not found");
+      }
     },
   },
 
@@ -141,6 +146,14 @@ export default {
     const accelYRef = ref(db, "sensors/accel_y");
     const accelZRef = ref(db, "sensors/accel_z");
     const distanceRef = ref(db, "sensors/distance");
+
+    window.addEventListener(
+      "click",
+      () => {
+        this.userInteracted = true;
+      },
+      { once: true }
+    );
 
     // Listen to danger state
     onValue(dangerRef, (snapshot) => {
@@ -169,16 +182,16 @@ export default {
 
     // Listen to distance data
     onValue(distanceRef, (snapshot) => {
-      const value = snapshot.val();
-      this.distance = value || 0;
-      const step = (targetValue) => {
-        if (this.animatedDistance < targetValue) {
-          this.animatedDistance += (targetValue - this.animatedDistance) * 0.05;
-          requestAnimationFrame(() => step(targetValue));
-        }
-      };
+      this.distance = snapshot.val();
+      // this.distance = value || 0;
+      // const step = (targetValue) => {
+      //   if (this.animatedDistance < targetValue) {
+      //     this.animatedDistance += (targetValue - this.animatedDistance) * 0.05;
+      //     requestAnimationFrame(() => step(targetValue));
+      //   }
+      // };
 
-      step(this.distance);
+      // step(this.distance);
     });
   },
 };
