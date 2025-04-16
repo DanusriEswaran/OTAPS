@@ -1,7 +1,11 @@
 <template>
   <v-app>
     <v-main>
-      <v-container class="fill-height d-flex flex-column">
+      <v-container
+        fluid
+        class="fill-height d-flex flex-column justify-start align-center pa-6"
+        :style="{ backgroundColor: danger ? 'red' : '#36454F' }"
+      >
         <!-- Header Card -->
         <v-card
           class="pa-8 text-center shadow-card max-width-900 elevation-24 rounded-xl mb-6 mx-auto"
@@ -126,6 +130,7 @@ export default {
       accelZ: 0,
       distance: 0,
       userInteracted: false,
+      accelXHistory: [],
     };
   },
 
