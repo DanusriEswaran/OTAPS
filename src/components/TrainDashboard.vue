@@ -4,23 +4,90 @@
       <v-container
         fluid
         class="fill-height d-flex flex-column justify-start align-center pa-6"
-        :style="{ backgroundColor: danger ? 'red' : '#36454F' }"
+        :class="danger ? 'blinking-container' : ''"
+        :style="{
+          backgroundColor: danger ? '#ffcccc' : '#36454F',
+          borderRadius: '12px',
+          marginTop: '20px',
+          marginRight: '15px',
+          marginLeft: '18px',
+        }"
       >
         <!-- Header Card -->
+        <div
+          class="d-flex align-items-center justify-between mb-6"
+          style="width: 100%; max-width: 900px; margin: 0 auto"
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+            "
+          >
+            <img
+              :src="trainLogo"
+              alt="train logo"
+              height="140px"
+              width="120px"
+              style="margin-left: 0px; margin-right: 0px"
+            />
+          </div>
+
+          <div
+            class="d-flex justify-center"
+            style="flex: 1; text-align: center"
+          >
+            <v-card
+              class="pa-8 shadow-card elevation-24 rounded-xl"
+              style="background-color: #b7d5eb; width: 100%; max-width: 600px"
+            >
+              <v-card-title class="text-h2 font-weight-bold text-primary">
+                OTAPS
+              </v-card-title>
+              <div>
+                <v-card-text
+                  class="text-subtitle-1 font-weight-medium mt-4 text-grey-darken-2"
+                >
+                  Open Train Accident Prevention System
+                </v-card-text>
+              </div>
+            </v-card>
+          </div>
+          <div></div>
+        </div>
+
+        <!-- Train Details Card -->
         <v-card
-          class="pa-8 text-center shadow-card max-width-900 elevation-24 rounded-xl mb-6 mx-auto"
+          class="pa-6 mb-6 text-left shadow-card elevation-12 rounded-lg w-100"
           style="background-color: #b7d5eb"
         >
-          <v-card-title class="text-h2 font-weight-bold text-primary">
-            OTAPS
+          <v-card-title class="mb-8 text-h4 font-weight-bold text-primary">
+            🚆 Train Details
           </v-card-title>
-          <div>
-            <v-card-text
-              class="text-subtitle-1 font-weight-medium mt-4 text-grey-darken-2"
-            >
-              Open Train Accident Prevention System
-            </v-card-text>
-          </div>
+          <v-card-text class="text-h6 mt-4">
+            <div class="d-flex justify-start mb-2">
+              <div class="mr-4">
+                <i class="fas fa-train"></i> <strong>Train Name:</strong>
+                {{ trainDetails.name }}
+              </div>
+              <div class="ml-16">
+                <i class="fas fa-id-badge"></i> <strong>Train ID:</strong>
+                {{ trainDetails.id }}
+              </div>
+            </div>
+
+            <div class="d-flex justify-start">
+              <div class="mr-4">
+                <i class="fas fa-route"></i> <strong>Route:</strong>
+                {{ trainDetails.route }}
+              </div>
+              <div class="ml-10">
+                <i class="fas fa-bolt mr-2"></i>
+                <strong>Train Type:</strong> {{ trainDetails.type }}
+              </div>
+            </div>
+          </v-card-text>
         </v-card>
 
         <!-- Alert Card -->
@@ -118,10 +185,18 @@
 <script>
 import { db, ref, onValue } from "@/firebase.js";
 import alertAudio from "@/assets/alert.mp3";
+import trainLogo from "@/assets/train-logo.png";
 
 export default {
   data() {
     return {
+      trainDetails: {
+        name: "Thomas Express",
+        id: "12345",
+        route: "Coimbatore ➝ Bengaluru",
+        type: "Local Train",
+      },
+      trainLogo: trainLogo,
       file: alertAudio,
       danger: false,
       lastDangerState: false,
@@ -209,5 +284,41 @@ export default {
 }
 .max-width-900 {
   max-width: 900px;
+}
+
+.blink-border {
+  border: 4px solid rgb(170, 13, 13);
+  border-radius: 20px;
+  padding: 16px;
+  margin: 20px;
+  background-color: #fff;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    box-shadow: 0 0 10px red, 0 0 20px red;
+    border-color: red;
+  }
+  50% {
+    box-shadow: none;
+    border-color: transparent;
+  }
+}
+@keyframes blink-glow {
+  0% {
+    box-shadow: 0 0 10px 2px #d71010;
+  }
+  50% {
+    box-shadow: 0 0 20px 6px #c60e0e;
+  }
+  100% {
+    box-shadow: 0 0 10px 2px #bd0d0d;
+  }
+}
+
+.blinking-container {
+  animation: blink-glow 1s infinite;
 }
 </style>
